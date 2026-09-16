@@ -74,10 +74,10 @@
         <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" repeatCount="indefinite"/>
       </circle>
 
-      <text x="-4" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">LOTE</text>
-      <text x="48" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">PESAGEM</text>
-      <text x="112" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">ESTOQUE</text>
-      <text x="182" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">VENDA</text>
+      <text x="-4" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">CODE</text>
+      <text x="48" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">BUILD</text>
+      <text x="112" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">DEBUG</text>
+      <text x="182" y="24" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="9" fill="#7d8590">DEPLOY</text>
     </g>
 
     <!-- texto -->
