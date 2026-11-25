@@ -91,6 +91,9 @@
 
 <p id="status" role="status"></p>
 
+<!-- Truque do iPhone (iOS 18+): alternar um interruptor nativo dá um toque de vibração -->
+<label id="hapticLabel" aria-hidden="true" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;overflow:hidden"><input type="checkbox" switch id="hapticSwitch" tabindex="-1"></label>
+
 <script>
   const btn = document.getElementById('pulse');
   const stage = document.getElementById('stage');
@@ -113,18 +116,29 @@
     if (mode === 'sos') return 3600;
     return period;
   }
+  const hapticLabel = document.getElementById('hapticLabel');
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let lastOk = null;
+  function iosTick() { try { hapticLabel.click(); } catch (e) {} }
   function tick() {
     const period = 60000 / Number(bpm.value);
-    if (canVibrate) navigator.vibrate(pattern(period));
+    if (canVibrate) lastOk = navigator.vibrate(pattern(period));
+    else if (isIOS) iosTick();
     timer = setTimeout(tick, cycleLength(period));
   }
   function start() {
     on = true; stage.classList.add('on'); btn.setAttribute('aria-pressed', 'true');
     btn.textContent = 'PARAR';
     clearTimeout(timer); tick();
-    status.textContent = canVibrate
-      ? 'Vibrando… Se nada acontecer, abra esta página direto no navegador (Chrome no Android).'
-      : 'Este navegador não permite vibração (o iPhone/Safari não suporta). A animação continua mesmo assim.';
+    if (canVibrate && lastOk === false) {
+      status.textContent = 'O navegador bloqueou a vibração aqui dentro. Abra o link direto no Chrome e confira se o celular não está no modo silencioso/sem vibração.';
+    } else if (canVibrate) {
+      status.textContent = 'Vibrando… Se não sentir nada, confira se a vibração do celular está ligada nas configurações.';
+    } else if (isIOS) {
+      status.textContent = 'iPhone: o Safari só deixa dar um toquinho de vibração a cada toque no botão (iOS 18 ou mais novo). Vibração contínua não é possível no iPhone por site.';
+    } else {
+      status.textContent = 'Este navegador não permite vibração. A animação continua mesmo assim.';
+    }
   }
   function stop() {
     on = false; stage.classList.remove('on'); btn.setAttribute('aria-pressed', 'false');
@@ -137,7 +151,7 @@
     bpmOut.textContent = bpm.value + ' bpm';
   }
 
-  btn.addEventListener('click', () => on ? stop() : start());
+  btn.addEventListener('click', () => { if (isIOS) iosTick(); on ? stop() : start(); });
   document.querySelectorAll('.modes button').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('.modes button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     mode = b.dataset.mode;
